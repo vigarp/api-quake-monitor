@@ -2,9 +2,14 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const axios = require('axios');
+const fetchDataFromBMKG  = require('./cron_job');
 const port = 3000;
 
-require('./cron_job');
+// require('./cron_job');
+
+app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`);
+  });
 
 // Fungsi untuk memeriksa status server BMKG
 async function checkBMKGServer() {
@@ -32,6 +37,9 @@ app.get('/', async (req, res) => {
     }, 10000)
 });
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`);
-  });
+app.get('/autogempa', async (req, res) => {
+    console.log('Fetching data from BMKG...');
+    const result = await fetchDataFromBMKG();
+    console.log(result)
+    res.send(result);
+})
