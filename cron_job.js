@@ -1,5 +1,4 @@
 const axios = require('axios');
-// const cron = require('node-cron');
 const { v4: uuidv4 } = require('uuid');
 
 const connection = require('./db_connection');
@@ -58,12 +57,5 @@ async function fetchDataFromBMKG() {
         };
     }
 }
-
-
-// cron.schedule('*/60 * * * * *', async () => {
-//     console.log('Fetching data from BMKG...');
-//     const result = await fetchDataFromBMKG();
-//     console.log(result)
-// });
 
 module.exports = fetchDataFromBMKG;

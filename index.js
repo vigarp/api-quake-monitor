@@ -5,8 +5,6 @@ const axios = require('axios');
 const fetchDataFromBMKG  = require('./cron_job');
 const port = 3000;
 
-// require('./cron_job');
-
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
   });
@@ -25,6 +23,12 @@ async function checkBMKGServer() {
     }
 }
 
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    next();
+  });
+
 // Route untuk direktori root ("/")
 app.get('/', async (req, res) => {
     setTimeout(async () => {
@@ -37,11 +41,19 @@ app.get('/', async (req, res) => {
     }, 10000)
 });
 
+// Route untuk direktori ("/autogempa")
 app.get('/autogempa', async (req, res) => {
-    setTimeout(async () => {
-        console.log('Fetching data from BMKG...');
-        const result = await fetchDataFromBMKG();
-        console.log(result);
-        res.json(result);
-    }, 5000)
+    const isCron = req.header('x-cyclic');
+    const secretKey = req.header('Secret-Key');
+
+    if (isCron === 'cron' && secretKey === process.env.CYCLIC_CRON_CUSTOM_SECRET_KEY) {
+        setTimeout(async () => {
+            console.log('Fetching data from BMKG...');
+            const result = await fetchDataFromBMKG();
+            console.log(result);
+            res.json(result);
+        }, 5000)
+    } else {
+        res.send('Hehe, mau apa kamu?');
+    }
 })
