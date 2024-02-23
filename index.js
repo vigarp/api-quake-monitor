@@ -38,8 +38,10 @@ app.get('/', async (req, res) => {
 });
 
 app.get('/autogempa', async (req, res) => {
-    console.log('Fetching data from BMKG...');
-    const result = await fetchDataFromBMKG();
-    console.log(result)
-    res.send(result);
+    setTimeout(async () => {
+        console.log('Fetching data from BMKG...');
+        const result = await fetchDataFromBMKG();
+        console.log(result);
+        res.json(result);
+    }, 5000)
 })
