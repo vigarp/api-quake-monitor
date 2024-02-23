@@ -44,7 +44,7 @@ app.get('/', async (req, res) => {
 // Route untuk direktori ("/autogempa")
 app.get('/autogempa', async (req, res) => {
     const isCron = req.header('x-cyclic');
-    const secretKey = req.header('secret-sey');
+    const secretKey = req.header('secret-key');
 
     if (isCron === 'cron' && secretKey === process.env.CYCLIC_CRON_CUSTOM_SECRET_KEY) {
         setTimeout(async () => {
